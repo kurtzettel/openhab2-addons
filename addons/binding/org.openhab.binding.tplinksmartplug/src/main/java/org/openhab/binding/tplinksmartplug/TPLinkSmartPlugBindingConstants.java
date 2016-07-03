@@ -27,7 +27,7 @@ public class TPLinkSmartPlugBindingConstants {
     public final static ThingTypeUID THING_TYPE_SAMPLE = new ThingTypeUID(BINDING_ID, "sample");
 
     // List of all Channel ids
-    public final static String CHANNEL_1 = "channel1";
+    public final static String CHANNEL_POWER = "power";
 
     private static final String TP_LINK_SMART_PLUG_HS100 = "HS100";
 

@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<thing:thing-descriptions bindingId="tplinksmartplug"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
-        xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
+<thing:thing-descriptions bindingId="tplinksmartplug" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:thing="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0"
+	xsi:schemaLocation="http://eclipse.org/smarthome/schemas/thing-description/v1.0.0 http://eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">
 
-    <!-- Sample Thing Type -->
-    <thing-type id="sample">
-        <label>TPLinkSmartPlug Binding Thing</label>
-        <description>Sample thing for TPLinkSmartPlug Binding</description>
+	<!-- HS100 -->
+	<thing-type id="HS100">
+		<label>TP-Link Wi-Fi Smart Plug</label>
+		<description>TP-Link Wi-Fi Smart Plug - Model HS100</description>
 
-        <channels>
-            <channel id="channel1" typeId="sample-channel"/>
-        </channels>
-    </thing-type>
-
-    <!-- Sample Channel Type -->
-    <channel-type id="sample-channel">
-        <item-type>tplinksmartplugItem</item-type>
-        <label>TPLinkSmartPlug Binding Channel</label>
-        <description>Sample channel for TPLinkSmartPlug Binding</description>
-    </channel-type>
-
+		<channels>
+			<channel id="power" typeId="power" />
+		</channels>
+		<config-description>
+			<parameter name="deviceId" type="text" required="true">
+				<label>MAC Address</label>
+				<description>The MAC address identifies a specific HS100 Smart Plug.</description>
+				<required>true</required>
+			</parameter>
+		</config-description>
+	</thing-type>
+	<channel-type id="power">
+		<item-type>Switch</item-type>
+		<label>Power</label>
+		<description>Switch on/off your HS100 Socket.</description>
+	</channel-type>
 </thing:thing-descriptions>

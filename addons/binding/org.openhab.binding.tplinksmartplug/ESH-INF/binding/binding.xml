@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://eclipse.org/smarthome/schemas/binding/v1.0.0 http://eclipse.org/smarthome/schemas/binding-1.0.0.xsd">
 
     <name>TPLinkSmartPlug Binding</name>
-    <description>This is the binding for TPLinkSmartPlug.</description>
+    <description>This binding allows TP-Link's SmartPlugs to be controlled by OpenHab.  Currently only the HS100 is supported but the protocol is likely compatible with other TP-Link devices such as the power monitoring outlet.</description>
     <author>Kurt Zettel</author>
 
 </binding:binding>

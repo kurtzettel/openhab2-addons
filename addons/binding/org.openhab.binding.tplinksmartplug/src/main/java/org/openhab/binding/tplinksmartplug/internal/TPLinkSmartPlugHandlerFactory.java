@@ -13,7 +13,6 @@ import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
-import org.eclipse.smarthome.core.thing.type.ThingType;
 import org.openhab.binding.tplinksmartplug.TPLinkSmartPlugBindingConstants;
 import org.openhab.binding.tplinksmartplug.handler.TPLinkSmartPlugHandler;
 
@@ -31,12 +30,6 @@ public class TPLinkSmartPlugHandlerFactory extends BaseThingHandlerFactory {
     public boolean supportsThingType(ThingTypeUID thingTypeUID) {
         boolean supported = SUPPORTED_THING_TYPES_UIDS.contains(thingTypeUID);
         return supported;
-    }
-
-    @Override
-    protected ThingType getThingTypeByUID(ThingTypeUID thingTypeUID) {
-        // TODO Auto-generated method stub
-        return super.getThingTypeByUID(thingTypeUID);
     }
 
     @Override

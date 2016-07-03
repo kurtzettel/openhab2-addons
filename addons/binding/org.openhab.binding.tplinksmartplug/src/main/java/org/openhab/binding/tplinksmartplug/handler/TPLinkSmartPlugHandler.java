@@ -7,41 +7,61 @@
  */
 package org.openhab.binding.tplinksmartplug.handler;
 
-import static org.openhab.binding.tplinksmartplug.TPLinkSmartPlugBindingConstants.*;
+import static org.openhab.binding.tplinksmartplug.TPLinkSmartPlugBindingConstants.CHANNEL_POWER;
 
+import java.io.IOException;
+
+import org.eclipse.smarthome.core.library.types.OnOffType;
 import org.eclipse.smarthome.core.thing.ChannelUID;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingStatus;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandler;
 import org.eclipse.smarthome.core.types.Command;
+import org.openhab.binding.tplinksmartplug.TPLinkController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The {@link TPLinkSmartPlugHandler} is responsible for handling commands, which are
  * sent to one of the channels.
- * 
+ *
  * @author Kurt Zettel - Initial contribution
  */
 public class TPLinkSmartPlugHandler extends BaseThingHandler {
 
-    private Logger logger = LoggerFactory.getLogger(TPLinkSmartPlugHandler.class);
+    private Logger log = LoggerFactory.getLogger(TPLinkSmartPlugHandler.class);
 
-	public TPLinkSmartPlugHandler(Thing thing) {
-		super(thing);
-	}
+    public TPLinkSmartPlugHandler(Thing thing) {
+        super(thing);
+    }
 
-	@Override
-	public void handleCommand(ChannelUID channelUID, Command command) {
-        if(channelUID.getId().equals(CHANNEL_1)) {
-            // TODO: handle command
+    @Override
+    public void handleCommand(ChannelUID channelUID, Command command) {
+
+        log.info("handleCommand:" + channelUID.getId() + ", command:" + command.toString() + ", thing:"
+                + getThing().getLabel());
+        if (channelUID.getId().equals(CHANNEL_POWER)) {
+            String ipAddress = getThing().getProperties().get("ip_address");
+            TPLinkController tpLinkController = new TPLinkController();
+            int state = 0;
+            OnOffType onOffType = (OnOffType) command;
+            if (OnOffType.ON.equals(onOffType)) {
+                state = 1;
+            } else {
+                state = 0;
+            }
+            try {
+                tpLinkController.setDeviceState(ipAddress, state);
+            } catch (IOException e) {
+                log.warn("Unable to change device state", e);
+            }
 
             // Note: if communication with thing fails for some reason,
             // indicate that by setting the status with detail information
             // updateStatus(ThingStatus.OFFLINE, ThingStatusDetail.COMMUNICATION_ERROR,
             // "Could not control device at IP address x.x.x.x");
         }
-	}
+    }
 
     @Override
     public void initialize() {

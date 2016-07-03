@@ -7,8 +7,8 @@ import org.eclipse.smarthome.config.discovery.AbstractDiscoveryService;
 import org.eclipse.smarthome.config.discovery.DiscoveryResult;
 import org.eclipse.smarthome.config.discovery.DiscoveryResultBuilder;
 import org.eclipse.smarthome.core.thing.ThingUID;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openhab.binding.tplinksmartplug.TPLinkController;
 import org.openhab.binding.tplinksmartplug.TPLinkSmartPlugBindingConstants;
 import org.slf4j.Logger;
@@ -29,22 +29,24 @@ public class TPLinkSmartPlugDiscovery extends AbstractDiscoveryService {
         TPLinkController tpLinkController = new TPLinkController();
         try {
             JSONArray devices = tpLinkController.getDevices();
-            for (int i = 0; i < devices.size(); i++) {
-                JSONObject jsonObject = (JSONObject) devices.get(i);
-                log.info("Scan result found: " + jsonObject.toJSONString());
+            for (int i = 0; i < devices.length(); i++) {
+                JSONObject jsonObject = devices.getJSONObject(i);
+                log.info("Scan result found: " + jsonObject.toString(2));
 
-                JSONObject sysInfo = (JSONObject) ((JSONObject) jsonObject.get("system")).get("get_sysinfo");
-                String deviceId = (String) sysInfo.get("mac");
+                JSONObject sysInfo = jsonObject.getJSONObject("system").getJSONObject("get_sysinfo");
+                String deviceId = sysInfo.getString("mac");
                 ThingUID uid = new ThingUID(TPLinkSmartPlugBindingConstants.HS100_UID, deviceId.replace(':', '_'));
 
                 if (uid != null) {
                     HashMap<String, Object> properties = new HashMap<String, Object>();
 
-                    properties.put("ip_address", jsonObject.get("ip_address"));
-                    properties.put("state", jsonObject.get("relay_state"));
+                    properties.put("ip_address", jsonObject.getString("ip_address"));
+                    properties.put("state", "" + sysInfo.getInt("relay_state"));
+                    properties.put(TPLinkSmartPlugBindingConstants.CHANNEL_POWER, sysInfo.getInt("relay_state"));
+                    properties.put("deviceId", deviceId);
 
                     DiscoveryResult result = DiscoveryResultBuilder.create(uid).withProperties(properties)
-                            .withLabel((String) sysInfo.get("alias")).build();
+                            .withLabel(sysInfo.getString("alias")).build();
 
                     thingDiscovered(result);
                 }
@@ -52,9 +54,6 @@ public class TPLinkSmartPlugDiscovery extends AbstractDiscoveryService {
         } catch (IOException e) {
             log.warn("Unable to scan for devices", e);
         }
-
-        // TODO Auto-generated method stub
-
     }
 
 }

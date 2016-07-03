@@ -9,13 +9,14 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TPLinkController {
+
+    // FIXME This is mine, move it to its own jar.
 
     private Logger log = LoggerFactory.getLogger(TPLinkController.class);
 
@@ -25,11 +26,11 @@ public class TPLinkController {
 
         JSONObject deviceInfoRequest = new JSONObject();
         JSONObject systemJson = new JSONObject();
-        systemJson.put("get_sysinfo", null);
+        systemJson.put("get_sysinfo", JSONObject.NULL);
         deviceInfoRequest.put("system", systemJson);
 
         JSONObject emeterJson = new JSONObject();
-        emeterJson.put("get_realtime", null);
+        emeterJson.put("get_realtime", JSONObject.NULL);
         deviceInfoRequest.put("emeter", emeterJson);
 
         log.info("Preparing request:" + deviceInfoRequest.toString());
@@ -54,9 +55,9 @@ public class TPLinkController {
                     byte[] responseBytes = dataPacket.getData();
                     String udpResponse = tpLinkResponseReader.decodeUdpResponse(responseBytes);
                     log.info("Response: " + udpResponse);
-                    JSONObject deviceJson = (JSONObject) JSONValue.parse(udpResponse.trim());
+                    JSONObject deviceJson = new JSONObject(udpResponse);
                     deviceJson.put("ip_address", address);
-                    devices.add(deviceJson);
+                    devices.put(deviceJson);
                 }
             } catch (SocketTimeoutException e) {
                 log.info("Received Socket Timeout Exception");
@@ -66,8 +67,7 @@ public class TPLinkController {
 
     }
 
-    public void setDeviceState(JSONObject device, int newState) throws IOException {
-        String deviceIp = (String) device.get("ip_address");
+    public void setDeviceState(String deviceIp, int newState) throws IOException {
         log.info("Changing status of device at " + deviceIp);
         // {"system":{"set_relay_state":{"state":1}}}
         JSONObject stateRequest = new JSONObject();
@@ -91,7 +91,6 @@ public class TPLinkController {
             String responseString = tpLinkResponseReader.decodeUdpResponse(response);
             log.info("Response:" + responseString);
         }
-
     }
 
 }

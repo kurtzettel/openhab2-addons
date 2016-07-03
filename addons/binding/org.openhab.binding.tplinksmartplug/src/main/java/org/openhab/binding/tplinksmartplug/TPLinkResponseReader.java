@@ -7,18 +7,8 @@ public class TPLinkResponseReader {
     private static final int TPLINK_XOR_INT = -0x55;
 
     public String decodeUdpResponse(byte[] response) {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        // int myByte = byteArray[0];
-        // int c1 = (myByte >> 24) & 0xFF;
-        // int c2 = (myByte >> 16) & 0xFF;
-        // int c3 = (myByte >> 8) & 0xFF;
-        // int c4 = myByte & 0xFF;
-        // outputStream.write(c1);
-        // outputStream.write(c2);
-        // outputStream.write(c3);
-        // outputStream.write(c4);
-        // We need to figure out how to read the length. It is in the first four bytes.
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         int xor = TPLINK_XOR_INT;
 
@@ -37,11 +27,8 @@ public class TPLinkResponseReader {
     public String decodeTCPResponse(byte[] response) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        int c1 = 24 * response[0];
-        int c2 = 16 * response[1];
-        int c3 = 8 * response[2];
-        int c4 = response[3];
-        int length = c1 + c2 + c3 + c4;
+        // The length of this can be read from the first four bytes. I don't think we need it.
+        // int length = getLength(response);
 
         int xor = TPLINK_XOR_INT;
 
